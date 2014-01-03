@@ -1,0 +1,15 @@
+{
+  "xqueue_header": "some_secret_001",
+  "xqueue_files": {
+    "my_file.rb": "http://path/to/my_file.rb"
+  },
+  "xqueue_body": {
+    "grader_payload": "payload",
+    "student_info": {
+      "anonymous_student_id":  "abc123",
+      "submission_time":  "2013-09-30 00:00:00 GMT"
+    }
+  }
+}
+
+      
