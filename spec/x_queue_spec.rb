@@ -4,11 +4,11 @@
 # For testing authentication:
 # curl --include --silent --user 'USER:PASS' --cookie-jar /tmp/cookies.txt  \
 #      --data-urlencode 'username=XXX' --data-urlencode 'password=YYY' \
-#      https://sandbox-xqueue.edx.org/xqueue/login/
+#      https://stage-xqueue.edx.org/xqueue/login/
 # For testing queue length: establish a valid session as above, then
 # curl --include --silent  --cookie /tmp/cookies.txt  \
 #      --data-urlencode 'queue_name=QNAME'  \
-#      https://sandbox-xqueue.edx.org/xqueue/get_queuelen
+#      https://stage-xqueue.edx.org/xqueue/get_queuelen
 
 require 'spec_helper'
 require 'fakeweb'
