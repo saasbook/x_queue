@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name        = 'x_queue'
+  s.name        = 'xqueue-ruby'
   s.version     = '0.0.1'
   s.date        = '2014-01-03'
   s.summary     = "Pull interface to Open edX XQueue"
