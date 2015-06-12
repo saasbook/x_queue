@@ -126,17 +126,15 @@ class XQueue
   # otherwise a new +XQueue::Submission+ instance.
   def get_submission
     authenticate unless authenticated?
-    raise "Not done yet"
     begin
-      JSON_response = request :get, '/xqueue/get_submission'
-      XQueueSubmission.new(self, JSON_response)
+      json_response = request :get, '/xqueue/get_submission'
+      XQueueSubmission.parse_JSON(self, JSON_response)
     rescue Error
       raise XQueueError 'Unexpected response from server.'
-    
+    end
   end
 
-def get_submission_verbose
-  XQueue = get_submission
+def get_submission_files
 end
 
 
@@ -181,8 +179,4 @@ end
       raise IOError, e.message
     end
   end
-
-  def parse_xobject
-  end
-
 end
