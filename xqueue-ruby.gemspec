@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Armando Fox"]
   s.email       = 'fox@cs.berkeley.edu'
   s.files       = %w(lib/x_queue.rb  
-                      lib/x_queue/x_queue.rb  lib/x_queue/x_queue_submission.rb)
+                      lib/x_queue/x_queue.rb  lib/x_queue/x_queue_submission.rb) #fix this
   s.executables = []
   # dependencies
   s.add_runtime_dependency 'builder'
