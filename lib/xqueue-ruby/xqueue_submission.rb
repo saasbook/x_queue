@@ -45,12 +45,12 @@ class XQueueSubmission
     @queue.put_result(@secret, @score, @message)
   end
 
-  def self.parse_JSON(XQueue, JSON_response)
-    parsed = JSON.parse(JSON_response)
+  def self.parse_JSON(xqueue, json_response)
+    parsed = JSON.parse(json_response)
     header, files, body = parsed['xqueue_header'], parsed['xqueue_files'], parsed['xqueue_body']
     grader_payload = body['grader_payload']
     anonymous_student_id, submission_time = body['student_info']['anonymous_student_id'], Time.new(body['student_info']['submission_time'])
-    XQueueSubmission.new {:queue XQueue, header: header, files: files, student_id: anonymous_student_id, submission_time: submission_time}
+    XQueueSubmission.new({queue: xqueue, header: header, files: files, student_id: anonymous_student_id, submission_time: submission_time })
   end
 
   def expand_files

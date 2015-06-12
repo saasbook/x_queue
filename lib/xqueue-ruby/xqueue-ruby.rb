@@ -1,6 +1,7 @@
 class XQueue
   require 'mechanize'
   require 'json'
+  require 'ruby-debug'
   
   # Ruby interface to the Open edX XQueue class for external checkers
   # (autograders).  Lets you pull student-submitted work products from a
@@ -127,10 +128,13 @@ class XQueue
   def get_submission
     authenticate unless authenticated?
     begin
-      json_response = request :get, '/xqueue/get_submission'
-      XQueueSubmission.parse_JSON(self, JSON_response)
-    rescue Error
-      raise XQueueError 'Unexpected response from server.'
+      puts '1 ----------------------------'
+      json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name}) 
+      puts '2 ----------------------------'
+      XQueueSubmission.parse_JSON(self, json_response)
+      puts '3----------------------------'
+    rescue StandardError => e
+      raise e
     end
   end
 
