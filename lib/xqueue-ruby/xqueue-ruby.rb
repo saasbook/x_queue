@@ -127,7 +127,18 @@ class XQueue
   def get_submission
     authenticate unless authenticated?
     raise "Not done yet"
+    begin
+      JSON_response = request :get, '/xqueue/get_submission'
+      XQueueSubmission.new(self, JSON_response)
+    rescue Error
+      raise XQueueError 'Unexpected response from server.'
+    
   end
+
+def get_submission_verbose
+  XQueue = get_submission
+end
+
 
   # Record a result of grading something.  It may be easier to use
   # +XQueue::Submission#post_back+, which marshals the information
@@ -169,6 +180,9 @@ class XQueue
     rescue Exception => e
       raise IOError, e.message
     end
+  end
+
+  def parse_xobject
   end
 
 end
