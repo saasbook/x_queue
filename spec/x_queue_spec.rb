@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 require 'fakeweb'
+require 'json'
 
 describe XQueue do
 
@@ -19,8 +20,13 @@ describe XQueue do
   after(:each) { FakeWeb.clean_registry }
   
   def fixture_response(method, file)
-    FakeWeb.register_uri(method.to_sym, %r|^https://.*xqueue.edx.org/|,
-      :response => "spec/fixtures/#{file}")
+    if file.include? '.json'
+      FakeWeb.register_uri(method.to_sym, %r|^https://.*xqueue.edx.org/|,
+                 :body => File.open("spec/fixtures/#{file}").read)
+    else
+      FakeWeb.register_uri(method.to_sym, %r|^https://.*xqueue.edx.org/|,
+                :response => "spec/fixtures/#{file}")
+    end
   end
   
   describe 'base URI' do
@@ -82,8 +88,9 @@ describe XQueue do
     describe 'retrieving submission' do
       context 'for queue that has submissions' do
         it 'should create a new XQueueSubmission from result' do
+          #fixture_response(:get, 'x_queue_queuelength.txt')
+          # raw_json = IO.read('spec/fixtures/json_response.txt')
           fixture_response(:get, 'valid_submission_with_file.json')
-          raw_json = IO.read('spec/fixtures/valid_submission_with_file.json')
           # expect { @q.get_submission }.to receive(:new).with(raw_json)
           expect(XQueueSubmission).to receive(:parse_JSON)
           @q.get_submission
