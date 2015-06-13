@@ -6,6 +6,7 @@ gem 'activemodel', '~> 3.2'
 
 group :development, :test do
   gem 'rspec'
+  gem 'rspec-mocks'
   gem 'fakeweb'
   gem 'ZenTest'
   gem 'debugger'

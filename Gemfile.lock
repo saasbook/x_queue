@@ -75,6 +75,7 @@ DEPENDENCIES
   json
   mechanize
   rspec
+  rspec-mocks
   simplecov
   simplecov-rcov
 
