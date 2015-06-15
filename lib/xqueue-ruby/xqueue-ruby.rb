@@ -91,6 +91,7 @@ class XQueue
     if response['return_code'] == 0
       @authenticated = true
     else
+
       raise(AuthenticationError, "Authentication failure: #{response['content']}")
     end
   end
@@ -127,21 +128,20 @@ class XQueue
   # otherwise a new +XQueue::Submission+ instance.
   def get_submission
     authenticate unless authenticated?
-    begin
-      puts '1 ----------------------------'
-      json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name}) 
-      puts '2 ----------------------------'
-      XQueueSubmission.parse_JSON(self, json_response)
-      puts '3----------------------------'
-    rescue StandardError => e
-      raise e
+    if queue_length
+      begin
+        puts '1 ----------------------------'
+        json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name}) 
+        puts '2 ----------------------------'
+        XQueueSubmission.parse_JSON(self, json_response)
+        puts '3----------------------------'
+      rescue StandardError => e  # TODO: do something more interesting with the error.
+        raise e
+      end
+    else
+      nil
     end
   end
-
-def get_submission_files
-end
-
-
   # Record a result of grading something.  It may be easier to use
   # +XQueue::Submission#post_back+, which marshals the information
   # needed here automatically.
@@ -175,6 +175,7 @@ end
     begin
       response = @session.send(method, @base_uri + path, args)
       response_json = JSON(response.body)
+
     rescue Mechanize::ResponseCodeError => e
       raise IOError, "Error communicating with server: #{e.message}"
     rescue JSON::ParserError => e

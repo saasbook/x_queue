@@ -32,7 +32,11 @@ class XQueueSubmission
   def initialize(hash)
     begin
       fields_hash = DEFAULTS.merge(hash)
-      fields_hash.each {|key, value| instance_variable_set("@#{key}", value)}
+      # fields_hash.each {|key, value| instance_variable_set("@#{key}", value)}
+      fields_hash.each  do |key, value| 
+        instance_variable_set("@#{key}", value)
+        puts "key #{key}, value #{value}"
+      end
     rescue NoMethodError => e
       if e.message == "undefined method `[]' for nil:NilClass"
         raise InvalidSubmissionError, "Missing element(s) in JSON: #{hash}"
@@ -49,8 +53,8 @@ class XQueueSubmission
     parsed = JSON.parse(json_response)
     header, files, body = parsed['xqueue_header'], parsed['xqueue_files'], parsed['xqueue_body']
     grader_payload = body['grader_payload']
-    anonymous_student_id, submission_time = body['student_info']['anonymous_student_id'], Time.new(body['student_info']['submission_time'])
-    XQueueSubmission.new({queue: xqueue, header: header, files: files, student_id: anonymous_student_id, submission_time: submission_time })
+    anonymous_student_id, submission_time = body['student_info']['anonymous_student_id'], Time.parse(body['student_info']['submission_time'])
+    XQueueSubmission.new({queue: xqueue, secret: header, files: files, student_id: anonymous_student_id, submission_time: submission_time })
   end
 
   def expand_files
