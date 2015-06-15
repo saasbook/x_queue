@@ -128,13 +128,10 @@ class XQueue
   # otherwise a new +XQueue::Submission+ instance.
   def get_submission
     authenticate unless authenticated?
-    if queue_length
+    if queue_length > 0
       begin
-        puts '1 ----------------------------'
         json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name}) 
-        puts '2 ----------------------------'
         XQueueSubmission.parse_JSON(self, json_response)
-        puts '3----------------------------'
       rescue StandardError => e  # TODO: do something more interesting with the error.
         raise e
       end

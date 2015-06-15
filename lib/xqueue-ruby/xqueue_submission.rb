@@ -28,15 +28,10 @@ class XQueueSubmission
   validates_presence_of :secret
   
   DEFAULTS = {correct: false, score: 0, message: '', errors: ''}
-
   def initialize(hash)
     begin
       fields_hash = DEFAULTS.merge(hash)
-      # fields_hash.each {|key, value| instance_variable_set("@#{key}", value)}
-      fields_hash.each  do |key, value| 
-        instance_variable_set("@#{key}", value)
-        puts "key #{key}, value #{value}"
-      end
+      fields_hash.each {|key, value| instance_variable_set("@#{key}", value)}
     rescue NoMethodError => e
       if e.message == "undefined method `[]' for nil:NilClass"
         raise InvalidSubmissionError, "Missing element(s) in JSON: #{hash}"
@@ -46,7 +41,7 @@ class XQueueSubmission
   end
 
   def post_back()
-    @queue.put_result(@secret, @score, @message)
+    @queue.put_result(@secret, @score, @correct, @message)
   end
 
   def self.parse_JSON(xqueue, json_response)

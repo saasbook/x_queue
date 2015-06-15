@@ -100,7 +100,15 @@ describe XQueue do
           @q.get_submission
         end
       end
-      context 'for empty queue'
+      context 'for empty queue' do 
+        before(:each) do 
+          fixture_response(:get, 'valid_submission_with_file.json')
+          @q.stub(:queue_length).and_return(0)
+        end
+        it 'should return nil' do 
+          expect(@q.get_submission).to be_nil
+        end
+      end
     end
   end
 
