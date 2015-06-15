@@ -3,6 +3,6 @@ require 'json'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__)))
 
-require 'xqueue-ruby/xqueue-ruby'
-require 'xqueue-ruby/xqueue_submission'
+require 'xqueue_ruby/xqueue_ruby'
+require 'xqueue_ruby/xqueue_submission'
 
