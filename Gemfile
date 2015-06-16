@@ -4,6 +4,7 @@ gem 'mechanize'
 gem 'json'
 gem 'activemodel', '~> 3.2'
 
+
 group :development, :test do
   gem 'rspec'
   gem 'rspec-mocks'
