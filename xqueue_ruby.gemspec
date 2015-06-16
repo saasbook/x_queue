@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   # dependencies
   spec.add_runtime_dependency 'builder'
   spec.add_runtime_dependency 'getopt'
-  spec.add_runtime_dependency 'activemodel', '~> 3.2'
+  spec.add_runtime_dependency 'activemodel'
   spec.homepage    = 'http://github.com/saasbook/x_queue'
   spec.license       = 'BSD'
 end
