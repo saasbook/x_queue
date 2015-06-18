@@ -72,7 +72,8 @@ class XQueue
   # * +user_name+, +user_pass+: second set of auth credentials (see
   # above)
   # * +queue_name+: logical name of the queue
-  def initialize(django_name, django_pass, user_name, user_pass, queue_name)
+  # * +retrieve_files+: boolean option to retrieve file named in xqueue_files in XQueueSubmission
+  def initialize(django_name, django_pass, user_name, user_pass, queue_name, retrieve_files=true)
     @queue_name = queue_name
     @base_uri = XQueue.base_uri
     @django_auth = {'username' => django_name, 'password' => django_pass}
@@ -81,6 +82,7 @@ class XQueue
     @valid_queues = nil
     @error = nil
     @authenticated = nil
+    @retrieve_files = retrieve_files
   end
 
   # Authenticates to the server.  You can call this explicitly, but it
@@ -124,14 +126,15 @@ class XQueue
     @valid_queues
   end
 
-  # Retrieve a submission from this queue.  Returns nil if queue is empty,
+  # Retrieve a submission from this queue. If retrieve files set to true, also gets files from URI if necessary.
+  # Returns nil if queue is empty,
   # otherwise a new +XQueue::Submission+ instance.
   def get_submission
     authenticate unless authenticated?
     if queue_length > 0
       begin
         json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name}) 
-        XQueueSubmission.parse_JSON(self, json_response)
+        @retrieve_files ? XQueueSubmission.parse_JSON(self, json_response).fetch_files : XQueueSubmission.parse_JSON(self, json_response)
       rescue StandardError => e  # TODO: do something more interesting with the error.
         raise e
       end

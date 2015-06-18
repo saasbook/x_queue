@@ -1,7 +1,7 @@
 {
   "xqueue_header": "some_secret_001",
   "xqueue_files": {
-    "my_file.rb": "http://path/to/my_file.rb"
+    "file.txt": "http://fakedownload.com/file.txt"
   },
   "xqueue_body": {
     "grader_payload": "payload",

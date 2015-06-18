@@ -13,7 +13,7 @@ describe XQueueSubmission do
   context 'is created from a valid JSON string' do
     before(:each) do 
       double = double('XQueue')
-      @submission = XQueueSubmission.parse_JSON(double, IO.read('spec/fixtures/valid_submission_with_file.json'))
+      @submission = XQueueSubmission.parse_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json')))
     end 
     it 'should have no errors' do
       expect(@submission.errors).to be_empty
@@ -35,11 +35,25 @@ describe XQueueSubmission do
     end
   end
 
+  context 'will retrieve files if the corresponding x_queue has retrieve file option set' do
+    before(:each) do 
+      @q = XQueue.new('good','good','good','good','my_queue', true)
+      @q.stub(:authenticated?).and_return(true)
+      fixture_response(:get, 'valid_submission_with_file.json')
+      fixture_response(:get, 'file.txt')
+      @q.stub(:queue_length).and_return(1)
+    end
+    it 'downloads files' do 
+      # puts @q.get_submission.files.pop.inspect
+      expect(@q.get_submission.files.pop).to be == 'this is a file'
+    end
+  end
+
   context 'can be submitted to a XQueue once graded' do 
     before(:each) do 
       @xq = double('XQueue')
       @xq.stub(:put_result)
-      @submission = XQueueSubmission.parse_JSON(@xq, IO.read('spec/fixtures/valid_submission_with_file.json'))
+      @submission = XQueueSubmission.parse_JSON(@xq, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json')))
       @submission = mock_grade(@submission)
     end
 

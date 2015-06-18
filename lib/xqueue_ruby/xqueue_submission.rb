@@ -1,3 +1,4 @@
+require 'mechanize'
 require 'active_model'
 require 'json'
 require 'debugger'
@@ -48,17 +49,19 @@ class XQueueSubmission
   end
 
   def self.parse_JSON(xqueue, json_response)
-    parsed = JSON.parse(json_response)
-    header, files, body = parsed['xqueue_header'], parsed['xqueue_files'], parsed['xqueue_body']
+    header, files, body = json_response['xqueue_header'], json_response['xqueue_files'], json_response['xqueue_body']
     grader_payload = body['grader_payload']
     anonymous_student_id, submission_time = body['student_info']['anonymous_student_id'], Time.parse(body['student_info']['submission_time'])
     XQueueSubmission.new({queue: xqueue, secret: header, files: files, student_id: anonymous_student_id, submission_time: submission_time, grader_payload: grader_payload})
   end
 
-  def expand_files
-    # @files = @files.map each do 
-    #   do something
-    # end
-    # self
+
+  def fetch_files
+    if files
+      file_agent = Mechanize.new
+      @files = @files.values.map {|file_uri| file_agent.get_file(file_uri)}
+    end
+    self
   end
+
 end
