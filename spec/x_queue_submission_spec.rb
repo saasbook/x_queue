@@ -13,7 +13,7 @@ describe XQueueSubmission do
   context 'is created from a valid JSON string' do
     before(:each) do 
       double = double('XQueue')
-      @submission = XQueueSubmission.parse_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json')))
+      @submission = XQueueSubmission.parse_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
     end 
     it 'should have no errors' do
       expect(@submission.errors).to be_empty
@@ -53,7 +53,7 @@ describe XQueueSubmission do
     before(:each) do 
       @xq = double('XQueue')
       @xq.stub(:put_result)
-      @submission = XQueueSubmission.parse_JSON(@xq, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json')))
+      @submission = XQueueSubmission.parse_JSON(@xq, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
       @submission = mock_grade(@submission)
     end
 

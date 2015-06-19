@@ -133,8 +133,12 @@ class XQueue
     authenticate unless authenticated?
     if queue_length > 0
       begin
-        json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name}) 
-        @retrieve_files ? XQueueSubmission.parse_JSON(self, json_response).fetch_files : XQueueSubmission.parse_JSON(self, json_response)
+        json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name})
+        if json_response['return_code'] == 0
+          @retrieve_files ? XQueueSubmission.parse_JSON(self, json_response['content']).fetch_files : XQueueSubmission.parse_JSON(self, JSON.parse(json_response['content']))
+        else
+          raise "Non-standard response received, JSON dump: #{json_response.pretty_generate}"
+        end
       rescue StandardError => e  # TODO: do something more interesting with the error.
         raise e
       end
@@ -173,9 +177,8 @@ class XQueue
   # :nodoc:
   def request(method, path, args={})
     begin
-      response = @session.send(method, @base_uri + path, args)
-      response_json = JSON(response.body)
-
+      response = @session.send(method, @base_uri + path, args)      
+      response_json = JSON.parse!(response.body)
     rescue Mechanize::ResponseCodeError => e
       raise IOError, "Error communicating with server: #{e.message}"
     rescue JSON::ParserError => e
