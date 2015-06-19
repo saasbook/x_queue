@@ -3,6 +3,8 @@ require 'active_model'
 require 'json'
 require 'debugger'
 
+
+
 class XQueueSubmission
   include ActiveModel::Validations
 
@@ -48,16 +50,6 @@ class XQueueSubmission
     @queue.put_result(@secret, @score, @correct, @message)
   end
 
-  def self.parse_JSON(xqueue, json_response)
-    json_response = recursive_JSON_parse(json_response)
-    header, files, body = json_response['xqueue_header'], json_response['xqueue_files'], json_response['xqueue_body']
-    grader_payload = body['grader_payload']
-    puts " -----------------------------------------------#{body.class}, \n ------- #{body}"
-    anonymous_student_id, submission_time = body['student_info']['anonymous_student_id'], Time.parse(body['student_info']['submission_time'])
-    XQueueSubmission.new({queue: xqueue, secret: header, files: files, student_id: anonymous_student_id, submission_time: submission_time, grader_payload: grader_payload})
-  end
-
-
   def fetch_files
     if files
       file_agent = Mechanize.new
@@ -66,28 +58,39 @@ class XQueueSubmission
     self
   end
 
+  def self.parse_JSON(xqueue, json_response)
+    json_response = recursive_JSON_parse(json_response)
+    header, files, body = json_response['xqueue_header'], json_response['xqueue_files'], json_response['xqueue_body']
+    grader_payload = body['grader_payload']
+    anonymous_student_id, submission_time = body['student_info']['anonymous_student_id'], Time.parse(body['student_info']['submission_time'])
+    XQueueSubmission.new({queue: xqueue, secret: header, files: files, student_id: anonymous_student_id, submission_time: submission_time, grader_payload: grader_payload})
+  end
+
+  # The JSON we recieve from the server is nested JSON hashes. Rather than calling JSON.parse at each level to get the JSON we choose to expand it into a multi-level hash immediately for easy
+  #access
+  def self.recursive_JSON_parse(hash, i=0)
+    # puts "level of recursion #{i}"
+    # puts "hash is #{hash.inspect} \n class #{hash.class}"
+    valid_json_hash = try_parse_json(hash)
+    if i > 100
+      raise "Depth level exceeded in recursive_JSON_parse, depth level : #{i}"
+    end
+    if valid_json_hash
+      valid_json_hash.update(valid_json_hash) do |key, value| 
+        value = recursive_JSON_parse(value, i + 1)
+      end
+      return valid_json_hash
+    else
+      return hash
+    end
+  end
+
   #returns nil if doesn't work
-  def try_parse_json(json)
+  def self.try_parse_json(json)
     begin
       JSON.parse(json)
     rescue Exception => e
        nil
     end
   end
-
-  def self.recursive_JSON_parse(hash, i=0)
-    puts "level of recursion #{i}"
-    hash.update(update) do |key, value| 
-      valid_json = try_parse_json(value)
-      if valid_json
-        value = recursive_JSON_parse(JSON.parse(value), i + 1)
-        return value
-      else 
-        value
-        return value
-      end
-    end
-  end
-
-
 end

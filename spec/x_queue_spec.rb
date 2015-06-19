@@ -80,21 +80,15 @@ describe XQueue do
     describe 'retrieving submission' do
       context 'for queue that has submissions' do
         before(:each) do 
-          fixture_response(:get, 'valid_submission_with_file.json')
+          fixture_response(:get, 'get_submission.json')
           @q.stub(:queue_length).and_return(1)
         end
         it 'should create a new XQueueSubmission from result' do
-          #fixture_response(:get, 'x_queue_queuelength.txt')
-          # raw_json = IO.read('spec/fixtures/json_response.txt')
-
-          # expect { @q.get_submission }.to receive(:new).with(raw_json)
-          # expect(XQueueSubmission).to receive(:parse_JSON)
           expect(@q.get_submission).to be 
         end
       end
       context 'for empty queue' do 
-        before(:each) do 
-          fixture_response(:get, 'valid_submission_with_file.json')
+        before(:each) do
           @q.stub(:queue_length).and_return(0)
         end
         it 'should return nil' do 

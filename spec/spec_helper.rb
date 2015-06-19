@@ -7,7 +7,6 @@ def fixture_response(method, file)
     FakeWeb.register_uri(method.to_sym, %r|^https://.*xqueue.edx.org/|,
                :body => File.open("spec/fixtures/#{file}").read)
   elsif file.include? 'file.txt'
-    puts '-----------------------------------------------------------------------'
     FakeWeb.register_uri(method.to_sym, %r|^http://fakedownload.com/|,
               :body => File.open("spec/fixtures/#{file}").read)
   else
