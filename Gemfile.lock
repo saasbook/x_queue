@@ -10,13 +10,6 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     builder (3.0.4)
-    columnize (0.3.6)
-    debugger (1.6.5)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.3.1)
-    debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.3.1)
     diff-lcs (1.2.4)
     docile (1.1.1)
     domain_name (0.5.15)
@@ -70,7 +63,6 @@ DEPENDENCIES
   ZenTest
   activemodel (~> 3.2)
   addressable
-  debugger
   fakeweb
   json
   mechanize
