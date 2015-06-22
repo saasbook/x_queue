@@ -8,6 +8,7 @@ gem 'activemodel', '~> 3.2'
 
 
 group :development, :test do
+  gem 'rake'
   gem 'rspec'
   gem 'rspec-mocks'
   gem 'fakeweb'
