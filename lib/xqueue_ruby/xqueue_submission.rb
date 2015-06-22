@@ -1,7 +1,7 @@
 require 'mechanize'
 require 'active_model'
 require 'json'
-require 'debugger'
+#require 'debugger'
 
 
 
