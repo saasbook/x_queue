@@ -93,7 +93,6 @@ class XQueue
     if response['return_code'] == 0
       @authenticated = true
     else
-
       raise(AuthenticationError, "Authentication failure: #{response['content']}")
     end
   end
@@ -157,22 +156,13 @@ class XQueue
   # * +message+: (optional) plain text feedback; will be coerced to UTF-8
 
   def put_result(header, score, correct=true, message='')
-    # payload = JSON.generate({
-    #     :xqueue_header => header,
-    #     :xqueue_body => {
-    #       :correct   => (!!correct).to_s.capitalize,
-    #       :score     => score,
-    #       :message   => message.encode('UTF-8',
-    #         :invalid => :replace, :undef => :replace, :replace => '?'),
-    #     }
-    #   })
     xqueue_body =   JSON.generate({
                   :correct   => (!!correct).to_s.capitalize,
-                  :score     => score,
-                  :message   => message.encode('UTF-8',
+                  :score     => score.to_s,
+                  :msg   => message.encode('UTF-8',
                     :invalid => :replace, :undef => :replace, :replace => '?'),
                                     })
-    payload = {xqueue_header: header, xqueue_body: xqueue_body}
+    payload = {xqueue_header: JSON.generate(header), xqueue_body: xqueue_body}
     response = request :post, '/xqueue/put_result/', payload
     if response['return_code'] != 0
       raise UpdateFailedError, response['content']
