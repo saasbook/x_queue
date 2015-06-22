@@ -4,4 +4,4 @@ rvm:
 install:
   - bundle install
 script:
-  - echo done
+  - bundle exec rspec
