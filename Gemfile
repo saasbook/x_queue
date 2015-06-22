@@ -12,8 +12,8 @@ group :development, :test do
   gem 'rspec-mocks'
   gem 'fakeweb'
   gem 'ZenTest'
-# remove debugger for upgrade to ruby2, can use byebug
-# gem 'debugger'
+  # byebug is ruby2 debugger
+  gem 'byebug'
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'addressable'

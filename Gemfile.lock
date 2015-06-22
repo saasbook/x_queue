@@ -10,6 +10,9 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     builder (3.0.4)
+    byebug (5.0.0)
+      columnize (= 0.9.0)
+    columnize (0.9.0)
     diff-lcs (1.2.4)
     docile (1.1.1)
     domain_name (0.5.15)
@@ -63,6 +66,7 @@ DEPENDENCIES
   ZenTest
   activemodel (~> 3.2)
   addressable
+  byebug
   fakeweb
   json
   mechanize
