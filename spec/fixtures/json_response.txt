@@ -1,0 +1,21 @@
+HTTP/1.1 200 OK
+Content-Type: text-plain
+Date: Sun, 29 Sep 2013 23:22:15 GMT
+Server: nginx/1.1.19
+Vary: Accept-Encoding
+Vary: Cookie
+Connection: keep-alive
+Content-Length: 289
+{
+  "xqueue_header": "some_secret_001",
+  "xqueue_files": {
+    "my_file.rb": "http://fakedownload.com/my_file.rb"
+  },
+  "xqueue_body": {
+    "grader_payload": "payload",
+    "student_info": {
+      "anonymous_student_id":  "abc123",
+      "submission_time":  "2013-09-30 00:00:00 GMT"
+    }
+  }
+}

@@ -1,3 +1,6 @@
 *.gem
 *~
 TAGS
+test_auth.sh
+cjar
+xqueue.txt
