@@ -13,7 +13,7 @@ describe XQueueSubmission do
   context 'is created from a valid JSON string' do
     before(:each) do 
       double = double('XQueue')
-      @submission = XQueueSubmission.parse_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
+      @submission = XQueueSubmission.create_from_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
     end 
     it 'should have no errors' do
       expect(@submission.errors).to be_empty
@@ -33,6 +33,9 @@ describe XQueueSubmission do
     it 'should have student_id abc123' do
       expect(@submission.student_id).to be == 'abc123'
     end
+    it 'should have file name and uri' do 
+      expect(@submission.files.first).to be == ['file.txt', 'http://fakedownload.com/file.txt']
+    end
   end
 
   context 'will retrieve files if the corresponding x_queue has retrieve file option set' do
@@ -44,8 +47,7 @@ describe XQueueSubmission do
       @q.stub(:queue_length).and_return(1)
     end
     it 'downloads files' do 
-      # puts @q.get_submission.files.pop.inspect
-      expect(@q.get_submission.files.pop).to be == 'this is a file'
+      expect(@q.get_submission.files.first).to be == ['file.txt', 'this is a file']
     end
   end
 
@@ -53,7 +55,7 @@ describe XQueueSubmission do
     before(:each) do 
       @xq = double('XQueue')
       @xq.stub(:put_result)
-      @submission = XQueueSubmission.parse_JSON(@xq, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
+      @submission = XQueueSubmission.create_from_JSON(@xq, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
       @submission = mock_grade(@submission)
     end
 

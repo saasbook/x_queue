@@ -46,19 +46,20 @@ class XQueueSubmission
     end
   end
 
-  def post_back()
+  def post_back
     @queue.put_result(@secret, @score, @correct, @message)
   end
 
-  def fetch_files
+  #call on XQueueSubmission to fetch the files if remote format and return XQueueSubmission
+  def fetch_files!
     if files
       file_agent = Mechanize.new
-      @files = @files.values.map {|file_uri| file_agent.get_file(file_uri)}
+      @files = @files.inject({}) {|new_hash, (k,v)| new_hash[k] = file_agent.get_file(v); new_hash}
     end
     self
   end
 
-  def self.parse_JSON(xqueue, json_response)
+  def self.create_from_JSON(xqueue, json_response)
     json_response = recursive_JSON_parse(json_response)
     header, files, body = json_response['xqueue_header'], json_response['xqueue_files'], json_response['xqueue_body']
     grader_payload = body['grader_payload']
@@ -68,10 +69,8 @@ class XQueueSubmission
 
   # The JSON we recieve from the server is nested JSON hashes. Rather than calling JSON.parse at each level to get the JSON we choose to expand it into a multi-level hash immediately for easy
   #access
-  def self.recursive_JSON_parse(hash, i=0)
-    # puts "level of recursion #{i}"
-    # puts "hash is #{hash.inspect} \n class #{hash.class}"
-    valid_json_hash = try_parse_json(hash)
+  def self.recursive_JSON_parse(obj, i=0)
+    valid_json_hash = try_parse_JSON(obj)
     if i > 100
       raise "Depth level exceeded in recursive_JSON_parse, depth level : #{i}"
     end
@@ -81,14 +80,14 @@ class XQueueSubmission
       end
       return valid_json_hash
     else
-      return hash
+      return obj
     end
   end
 
-  #returns nil if doesn't work
-  def self.try_parse_json(json)
+  #returns nil if the object is not JSON
+  def self.try_parse_JSON(obj)
     begin
-      JSON.parse(json)
+      JSON.parse(obj)
     rescue Exception => e
        nil
     end

@@ -134,7 +134,8 @@ class XQueue
       begin
         json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name})
         if json_response['return_code'] == 0
-          @retrieve_files ? XQueueSubmission.parse_JSON(self, json_response['content']).fetch_files : XQueueSubmission.parse_JSON(self,json_response['content'])
+          @retrieve_files ? XQueueSubmission.create_from_JSON(self, json_response['content']).fetch_files! :
+                            XQueueSubmission.create_from_JSON(self,json_response['content'])
         else
           raise "Non-standard response received, JSON dump: #{json_response.pretty_generate}"
         end
