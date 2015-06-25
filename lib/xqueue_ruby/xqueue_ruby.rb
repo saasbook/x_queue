@@ -1,6 +1,7 @@
 class XQueue
   require 'mechanize'
   require 'json'
+ # require 'ruby-debug'
   
   # Ruby interface to the Open edX XQueue class for external checkers
   # (autograders).  Lets you pull student-submitted work products from a
@@ -71,7 +72,8 @@ class XQueue
   # * +user_name+, +user_pass+: second set of auth credentials (see
   # above)
   # * +queue_name+: logical name of the queue
-  def initialize(django_name, django_pass, user_name, user_pass, queue_name)
+  # * +retrieve_files+: boolean option to retrieve file named in xqueue_files in XQueueSubmission
+  def initialize(django_name, django_pass, user_name, user_pass, queue_name, retrieve_files=true)
     @queue_name = queue_name
     @base_uri = XQueue.base_uri
     @django_auth = {'username' => django_name, 'password' => django_pass}
@@ -80,6 +82,7 @@ class XQueue
     @valid_queues = nil
     @error = nil
     @authenticated = nil
+    @retrieve_files = retrieve_files
   end
 
   # Authenticates to the server.  You can call this explicitly, but it
@@ -122,13 +125,27 @@ class XQueue
     @valid_queues
   end
 
-  # Retrieve a submission from this queue.  Returns nil if queue is empty,
+  # Retrieve a submission from this queue. If retrieve files set to true, also gets files from URI if necessary.
+  # Returns nil if queue is empty,
   # otherwise a new +XQueue::Submission+ instance.
   def get_submission
     authenticate unless authenticated?
-    raise "Not done yet"
+    if queue_length > 0
+      begin
+        json_response = request(:get, '/xqueue/get_submission/',  {:queue_name => @queue_name})
+        if json_response['return_code'] == 0
+          @retrieve_files ? XQueueSubmission.create_from_JSON(self, json_response['content']).fetch_files! :
+                            XQueueSubmission.create_from_JSON(self,json_response['content'])
+        else
+          raise "Non-standard response received, JSON dump: #{json_response.pretty_generate}"
+        end
+      rescue StandardError => e  # TODO: do something more interesting with the error.
+        raise e
+      end
+    else
+      nil
+    end
   end
-
   # Record a result of grading something.  It may be easier to use
   # +XQueue::Submission#post_back+, which marshals the information
   # needed here automatically.
@@ -140,16 +157,14 @@ class XQueue
   # * +message+: (optional) plain text feedback; will be coerced to UTF-8
 
   def put_result(header, score, correct=true, message='')
-    payload = JSON.generate({
-        :xqueue_header => header,
-        :xqueue_body => {
-          :correct   => (!!correct).to_s.capitalize,
-          :score     => score,
-          :message   => message.encode('UTF-8',
-            :invalid => :replace, :undef => :replace, :replace => '?'),
-        }
-      })
-    response = request :post, '/xqueue/put_result', payload
+    xqueue_body =   JSON.generate({
+                  :correct   => (!!correct).to_s.capitalize,
+                  :score     => score.to_s,
+                  :msg   => message.encode('UTF-8',
+                    :invalid => :replace, :undef => :replace, :replace => '?'),
+                                    })
+    payload = {xqueue_header: JSON.generate(header), xqueue_body: xqueue_body}
+    response = request :post, '/xqueue/put_result/', payload
     if response['return_code'] != 0
       raise UpdateFailedError, response['content']
     end
@@ -161,7 +176,7 @@ class XQueue
   def request(method, path, args={})
     begin
       response = @session.send(method, @base_uri + path, args)
-      response_json = JSON(response.body)
+      response_json = JSON.parse(response.body)
     rescue Mechanize::ResponseCodeError => e
       raise IOError, "Error communicating with server: #{e.message}"
     rescue JSON::ParserError => e
@@ -170,5 +185,4 @@ class XQueue
       raise IOError, e.message
     end
   end
-
 end
