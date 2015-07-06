@@ -71,7 +71,7 @@ class XQueueSubmission
         zip_file.extract(f, f_path) unless File.exist?(f_path)
       end
     end
-    files
+    files[files.keys.first] = "#{root_file_path}-#{student_id}"
   end
 
 
