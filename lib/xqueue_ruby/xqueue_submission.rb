@@ -1,6 +1,8 @@
 require 'mechanize'
 require 'active_model'
 require 'json'
+require 'rubyzip'
+require 'tempfile'
 #require 'debugger'
 
 
@@ -42,7 +44,7 @@ class XQueueSubmission
       if e.message == "undefined method `[]' for nil:NilClass"
         raise InvalidSubmissionError, "Missing element(s) in JSON: #{hash}"
       end
-      raise StandardError 'yoloswag'
+      raise e
     end
   end
 
@@ -58,6 +60,21 @@ class XQueueSubmission
     end
     self
   end
+
+  #If student submits a zip_file, then we assume that it is the first and only file uploaded. writes the zip archive into a root root_file_path specified by caller
+  #Source for zipping code: 
+  # http://stackoverflow.com/questions/19754883/how-to-unzip-a-zip-file-containing-folders-and-files-in-rails-while-keeping-the
+  def unzip! (root_file_path)
+    tmp_zip = Tempfile.new('zip_file', 'w') {|tmp| tmp.write(files.values.first); tmp}  # block should yield tmp at end
+    Zip::File.open(tmp_zip) do |zip_file|
+      zip_file.each do |f|
+        f_path=File.join(root_file_path, f.name)
+        FileUtils.mkdir_p(File.dirname(f_path))
+        zip_file.extract(f, f_path) unless File.exist?(f_path)
+      end
+    end
+  end
+
 
   def self.create_from_JSON(xqueue, json_response)
     json_response = recursive_JSON_parse(json_response)

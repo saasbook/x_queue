@@ -5,6 +5,7 @@ ruby '2.2.2'
 gem 'mechanize'
 gem 'json'
 gem 'activemodel', '~> 3.2'
+gem 'rubyzip'
 
 
 group :development, :test do
@@ -13,7 +14,6 @@ group :development, :test do
   gem 'rspec-mocks'
   gem 'fakeweb'
   gem 'ZenTest'
-  # byebug is ruby2 debugger
   gem 'byebug'
   gem 'simplecov'
   gem 'simplecov-rcov'
