@@ -1,11 +1,8 @@
 require 'mechanize'
 require 'active_model'
 require 'json'
-require 'rubyzip'
+require 'zip'
 require 'tempfile'
-#require 'debugger'
-
-
 
 class XQueueSubmission
   include ActiveModel::Validations
