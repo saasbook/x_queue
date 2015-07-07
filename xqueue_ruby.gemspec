@@ -13,6 +13,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'builder'
   spec.add_runtime_dependency 'getopt'
   spec.add_runtime_dependency 'activemodel'
+  spec.add_runtime_dependency 'rubyzip'
   spec.homepage    = 'http://github.com/saasbook/x_queue'
   spec.license       = 'BSD'
 end
