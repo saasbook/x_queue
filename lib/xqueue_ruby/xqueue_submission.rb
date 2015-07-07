@@ -63,7 +63,7 @@ class XQueueSubmission
   #Source for zipping code: 
   # http://stackoverflow.com/questions/19754883/how-to-unzip-a-zip-file-containing-folders-and-files-in-rails-while-keeping-the
   def unzip! (root_file_path)
-    tmp_zip = Tempfile.new('zip_file') {|tmp| tmp.write(files.values.first); tmp}  # block should yield tmp at end
+    tmp_zip = Tempfile.open('zip_file') {|tmp| tmp.write(files.values.first); tmp}  # block should yield tmp at end
     Zip::File.open(tmp_zip) do |zip_file|
       zip_file.each do |f|
         f_path=File.join("#{root_file_path}-#{student_id}", f.name)
