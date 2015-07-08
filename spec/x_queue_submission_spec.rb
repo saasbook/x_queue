@@ -11,10 +11,10 @@ describe XQueueSubmission do
   end
 
   context 'is created from a valid JSON string' do
-    before(:each) do 
+    before(:each) do
       double = double('XQueue')
       @submission = XQueueSubmission.create_from_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
-    end 
+    end
     it 'should have no errors' do
       expect(@submission.errors).to be_empty
     end
@@ -52,7 +52,7 @@ describe XQueueSubmission do
   end
 
   context 'can be submitted to a XQueue once graded' do 
-    before(:each) do 
+    before(:each) do
       @xq = double('XQueue')
       @xq.stub(:put_result)
       @submission = XQueueSubmission.create_from_JSON(@xq, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
@@ -63,5 +63,26 @@ describe XQueueSubmission do
       expect(@xq).to receive(:put_result).with('some_secret_001', 1.3, true, 'good job student!')
       @submission.post_back
     end
+  end
+
+  context 'can download files to local locations' do
+    require 'fakefs'
+    before(:each) do
+      @q = XQueue.new('good','good','good','good','my_queue', true)
+      @q.stub(:authenticated?).and_return(true)
+      fixture_response(:get, 'valid_submission_with_file.json')
+      fixture_response(:get, 'file.txt')
+      @q.stub(:queue_length).and_return(1)
+    end
+
+    it 'will unzip files and place them in the correct directory ' do
+
+    end
+
+    it 'will put regular files in the correct directory ' do
+
+    end
+
+
   end
 end

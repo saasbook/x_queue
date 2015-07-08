@@ -18,5 +18,6 @@ group :development, :test do
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'addressable'
+  gem 'fakefs'  # for mocking FileIO calls
 end
 

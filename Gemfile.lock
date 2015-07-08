@@ -17,6 +17,7 @@ GEM
     docile (1.1.1)
     domain_name (0.5.15)
       unf (>= 0.0.5, < 1.0.0)
+    fakefs (0.6.7)
     fakeweb (1.3.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
@@ -68,6 +69,7 @@ DEPENDENCIES
   activemodel (~> 3.2)
   addressable
   byebug
+  fakefs
   fakeweb
   json
   mechanize
