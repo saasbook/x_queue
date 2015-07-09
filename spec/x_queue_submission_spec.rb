@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+require 'fakefs'
 
 describe XQueueSubmission do
 
@@ -66,7 +66,7 @@ describe XQueueSubmission do
   end
 
   context 'can download files to local locations' do
-    require 'fakefs'
+
     before(:each) do
       @q = XQueue.new('good','good','good','good','my_queue', true)
       @q.stub(:authenticated?).and_return(true)
