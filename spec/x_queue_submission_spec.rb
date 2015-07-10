@@ -1,7 +1,9 @@
 require 'spec_helper'
-require 'fakefs'
-
+require 'fakefs/safe'
+require 'fakeweb'
 describe XQueueSubmission do
+  before(:each) { FakeWeb.allow_net_connect = false }
+  after(:each) { FakeWeb.clean_registry }
 
   def mock_grade(submission)
     submission.correct = true
@@ -66,23 +68,24 @@ describe XQueueSubmission do
   end
 
   context 'can download files to local locations' do
+    # FakeFS.activate!
 
     before(:each) do
       @q = XQueue.new('good','good','good','good','my_queue', true)
       @q.stub(:authenticated?).and_return(true)
-      fixture_response(:get, 'valid_submission_with_file.json')
-      fixture_response(:get, 'file.txt')
+      fixture_response(:get, 'valid_submission_with_zip.json')
+      fixture_response(:get, 'exammple.zip')
       @q.stub(:queue_length).and_return(1)
     end
 
     it 'will unzip files and place them in the correct directory ' do
-
+      FakeWeb.allow_net_connect = false
+      submission = @q.get_submission
+      submission.write_to
     end
-
     it 'will put regular files in the correct directory ' do
 
     end
-
-
+    # FakeFS.deactivate!
   end
 end

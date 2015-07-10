@@ -11,6 +11,7 @@ gem 'rubyzip'
 group :development, :test do
   # gem rake
   gem 'rspec'
+  gem 'rspec-its'
   gem 'rspec-mocks'
   gem 'fakeweb'
   gem 'ZenTest'
@@ -18,6 +19,6 @@ group :development, :test do
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'addressable'
-  gem 'fakefs'  # for mocking FileIO calls
+  gem 'fakefs', :require => 'fakefs/safe'  # for mocking FileIO calls
 end
 

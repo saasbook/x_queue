@@ -13,6 +13,8 @@
 require 'spec_helper'
 require 'fakeweb'
 require 'json'
+require 'rspec/its'
+
 
 describe XQueue do
 

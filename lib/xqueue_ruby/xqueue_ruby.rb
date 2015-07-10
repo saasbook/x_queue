@@ -1,7 +1,6 @@
 class XQueue
   require 'mechanize'
   require 'json'
- # require 'ruby-debug'
   
   # Ruby interface to the Open edX XQueue class for external checkers
   # (autograders).  Lets you pull student-submitted work products from a
