@@ -59,15 +59,16 @@ class XQueueSubmission
   end
 
   def write_to_location!(root_file_path)
-    Dir.mkdir @student_id unless Dir.exist? @student_id
-    root location = "#{root_file_path}#{student_id}/"
+    root_location = File.join(root_file_path, @student_id)
+    FileUtils.mkdir_p root_location
     @files.each do |file_name, contents|
+      puts "file name is #{file_name}"
       if file_name.include? '.zip'
-        file = unzip root_location, contents
+        unzip root_location, contents
       else
-        file = File.open("#{root_location}#{file_name}", 'w') {|file| file.write(contents); file}
+        File.open("#{root_location}#{file_name}", 'w') { |file| file.write(contents); file }
       end
-      @files[file_name] = file.path  # after we write to location, change the values so that it points to the places on disk where the files can be found
+      @files[file_name] = root_location  # after we write to location, change the values so that it points to the places on disk where the files can be found
     end
   end 
 
@@ -76,14 +77,13 @@ class XQueueSubmission
   # http://stackoverflow.com/questions/19754883/how-to-unzip-a-zip-file-containing-folders-and-files-in-rails-while-keeping-the
   def unzip(root_location, contents)
     tmp_zip = Tempfile.open('zip_file') {|tmp| tmp.write(contents); tmp}  # block should yield tmp at end
-    Zip::File.open(tmp_zip) do |zip_file|
+    Zip::File.open(tmp_zip.path) do |zip_file|
       zip_file.each do |f|
         f_path = File.join(root_location, f.name)
         FileUtils.mkdir_p(File.dirname(f_path))
         zip_file.extract(f, f_path) unless File.exist?(f_path)
       end
     end
-    root_file_path  # ok not sure what this should be 
   end
 
 

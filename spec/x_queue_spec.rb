@@ -26,11 +26,11 @@ describe XQueue do
   describe 'base URI' do
     after(:all) { XQueue.base_uri = XQueue::XQUEUE_DEFAULT_BASE_URI }
     it 'has a default' do
-      XQueue.base_uri.to_s.should_not be_empty
+      expect(XQueue.base_uri.to_s).not_to be_empty
     end
     it 'can be changed to a valid URI' do
       expect { XQueue.base_uri = 'http://my.com/URI' }.not_to raise_error
-      XQueue.base_uri.should == URI('http://my.com/URI')
+      expect(XQueue.base_uri).to be == URI('http://my.com/URI')
     end
     it 'cannot be changed to an invalid URI' do
       expect { XQueue.base_uri = '12%' }.to raise_error(URI::InvalidURIError)
@@ -67,7 +67,7 @@ describe XQueue do
     end
     it 'should return list of queue names' do
       fixture_response(:get, 'x_queue_no_such_queue.txt')
-      @q.list_queues.should == %w(test-pull test-2)
+      expect(@q.list_queues).to be == %w(test-pull test-2)
     end
     describe 'get queue length' do
       it 'for existing queue should return an integer' do
@@ -99,6 +99,5 @@ describe XQueue do
       end
     end
   end
-
 end
 

@@ -68,24 +68,26 @@ describe XQueueSubmission do
   end
 
   context 'can download files to local locations' do
-    # FakeFS.activate!
+    FakeFS.activate!
 
     before(:each) do
       @q = XQueue.new('good','good','good','good','my_queue', true)
       @q.stub(:authenticated?).and_return(true)
       fixture_response(:get, 'valid_submission_with_zip.json')
-      fixture_response(:get, 'exammple.zip')
+      fixture_response(:get, 'example.zip')
       @q.stub(:queue_length).and_return(1)
     end
 
     it 'will unzip files and place them in the correct directory ' do
       FakeWeb.allow_net_connect = false
       submission = @q.get_submission
-      submission.write_to
+      submission.write_to_location! 'submissions/'
+      expect(File.readable? 'submissions/abc123/spec/').to be_truthy
+      expect(submission.files.values.first).to be == 'submissions/abc123'
     end
     it 'will put regular files in the correct directory ' do
 
     end
-    # FakeFS.deactivate!
+    FakeFS.deactivate!
   end
 end

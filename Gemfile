@@ -9,7 +9,6 @@ gem 'rubyzip'
 
 
 group :development, :test do
-  # gem rake
   gem 'rspec'
   gem 'rspec-its'
   gem 'rspec-mocks'
