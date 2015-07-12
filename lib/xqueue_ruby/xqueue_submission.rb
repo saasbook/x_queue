@@ -26,6 +26,8 @@ class XQueueSubmission
   attr_accessor :correct
   # Boolean: if true when posted back, shows green checkmark, otherwise red X
   attr_reader :files
+  #used in RAG to store grader_payload information.
+  attr_accessor :assignment
 
 
   validates_presence_of :student_id
@@ -95,7 +97,7 @@ class XQueueSubmission
     XQueueSubmission.new({queue: xqueue, secret: header, files: files, student_id: anonymous_student_id, submission_time: submission_time, grader_payload: grader_payload})
   end
 
-  # The JSON we recieve from the server is nested JSON hashes. Rather than calling JSON.parse at each level to get the JSON we choose to expand it into a multi-level hash immediately for easy
+  # The JSON we receive from the server is nested JSON hashes. Rather than calling JSON.parse at each level to get the JSON we choose to expand it into a multi-level hash immediately for easy
   #access
   def self.recursive_JSON_parse(obj, i=0)
     valid_json_hash = try_parse_JSON(obj)
