@@ -1,4 +1,5 @@
-require 'fake_web'
+require 'fakeweb'
+require 'fakefs/safe'
 Dir[File.join(File.dirname(__FILE__), '..', 'lib', '*.rb')].each { |f|  load f }
 def fixture_response(method, file)  # TODO: stop hardcoding these use cases! only should be differentiating between files and actual page responses.
   puts "FILE REQUESTED: #{file}"

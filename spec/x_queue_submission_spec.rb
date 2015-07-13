@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'fakefs/safe'
-require 'fakeweb'
 describe XQueueSubmission do
   before(:each) { FakeWeb.allow_net_connect = false }
   after(:each) { FakeWeb.clean_registry }

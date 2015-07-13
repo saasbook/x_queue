@@ -11,13 +11,12 @@
 #      https://stage-xqueue.edx.org/xqueue/get_queuelen
 
 require 'spec_helper'
-require 'fakeweb'
 require 'json'
 require 'rspec/its'
 
 
 describe XQueue do
-
+FakeFS.activate!
   before(:each) { FakeWeb.allow_net_connect = false }
   after(:each) { FakeWeb.clean_registry }
   
@@ -99,5 +98,6 @@ describe XQueue do
       end
     end
   end
+FakeFS.deactivate!
 end
 

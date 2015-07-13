@@ -64,11 +64,10 @@ class XQueueSubmission
     root_location = File.join(root_file_path, @student_id)
     FileUtils.mkdir_p root_location
     @files.each do |file_name, contents|
-      puts "file name is #{file_name}"
       if file_name.include? '.zip'
         unzip root_location, contents
       else
-        File.open("#{root_location}#{file_name}", 'w') { |file| file.write(contents); file }
+        File.open(File.join(root_location, file_name), 'w') { |file| file.write(contents); file }
       end
       @files[file_name] = root_location  # after we write to location, change the values so that it points to the places on disk where the files can be found
     end
