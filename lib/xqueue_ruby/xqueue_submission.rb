@@ -51,6 +51,11 @@ class XQueueSubmission
     @queue.put_result(@secret, @score, @correct, @message)
   end
 
+  def grade(comments, score, total_score=100)
+    @message = comments
+    @score = score / total_score
+  end
+
   #call on XQueueSubmission to fetch the files if remote format and return XQueueSubmission
   def fetch_files!
     if files
