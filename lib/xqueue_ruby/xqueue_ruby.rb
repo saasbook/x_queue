@@ -114,7 +114,7 @@ class XQueue
       raise IOError, response['content']
     end
   end
-
+  # Displays the list of queues.
   def list_queues
     authenticate unless authenticated?
     if @valid_queues.nil?
@@ -123,7 +123,6 @@ class XQueue
     end
     @valid_queues
   end
-
   # Retrieve a submission from this queue. If retrieve files set to true, also gets files from URI if necessary.
   # Returns nil if queue is empty,
   # otherwise a new +XQueue::Submission+ instance.
@@ -146,7 +145,7 @@ class XQueue
     end
   end
   # Record a result of grading something.  It may be easier to use
-  # +XQueue::Submission#post_back+, which marshals the information
+  # XQueueSubmission#post_back, which marshals the information
   # needed here automatically.
   #
   # * +header+: secret header key (from 'xqueue_header' slot in the
