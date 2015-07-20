@@ -15,9 +15,6 @@ describe XQueueSubmission do
       double = double('XQueue')
       @submission = XQueueSubmission.create_from_JSON(double, JSON.parse(IO.read('spec/fixtures/valid_submission_with_file.json'))['content'])
     end
-    it 'should have no errors' do
-      expect(@submission.errors).to be_empty
-    end
     it 'should have secret some_secret_001' do
       expect(@submission.secret).to be == 'some_secret_001'
     end
