@@ -76,7 +76,7 @@ describe XQueueSubmission do
     it 'will unzip files and place them in the correct directory ' do
       FakeWeb.allow_net_connect = false
       submission = @q.get_submission
-      submission.write_to_location! 'submissions/'
+      submission.write_to_location! File.join('submissions', 'abc123')
       expect(File.readable? 'submissions/abc123/spec/').to be_truthy
       expect(submission.files.values.first).to be == 'submissions/abc123'
     end

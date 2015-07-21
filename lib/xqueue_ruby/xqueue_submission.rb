@@ -69,15 +69,15 @@ class XQueueSubmission
   end
   # call on XQueueSubmission to write files that have already been fetched and writes them to a specified location.
   def write_to_location!(root_file_path)
-    root_location = File.join(root_file_path, @student_id)
-    FileUtils.mkdir_p root_location
+
+    FileUtils.mkdir_p root_file_path
     @files.each do |file_name, contents|
       if file_name.include? '.zip'
-        unzip root_location, contents
+        unzip root_file_path, contents
       else
-        File.open(File.join(root_location, file_name), 'w') { |file| file.write(contents); file }
+        File.open(File.join(root_file_path, file_name), 'w') { |file| file.write(contents); file }
       end
-      @files[file_name] = root_location  # after we write to location, change the values so that it points to the places on disk where the files can be found
+      @files[file_name] = root_file_path  # after we write to location, change the values so that it points to the places on disk where the files can be found
     end
   end 
 
@@ -112,7 +112,7 @@ class XQueueSubmission
   def self.try_parse_JSON(obj)
     begin
       JSON.parse(obj)
-    rescue Exception => e
+    rescue Exception
        nil
     end
   end
