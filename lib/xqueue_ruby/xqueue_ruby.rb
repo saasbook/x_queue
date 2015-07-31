@@ -156,11 +156,11 @@ class XQueue
 
   def put_result(header, score, correct=true, message='')
     xqueue_body =   JSON.generate({
-                  :correct   => (!!correct).to_s.capitalize,
+                  :correct   => (!!correct).to_s.capitalize,  # valid is True or False
                   :score     => score.to_s,
                   :msg   => message.encode('UTF-8',
                     :invalid => :replace, :undef => :replace, :replace => '?'),
-                                    })
+                                  })
     payload = {xqueue_header: JSON.generate(header), xqueue_body: xqueue_body}
     response = request :post, '/xqueue/put_result/', payload
     if response['return_code'] != 0

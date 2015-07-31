@@ -62,7 +62,7 @@ describe XQueueSubmission do
     end
   end
 
-  context 'can download files to local locations' do
+  context 'can download 1files to local locations' do
     FakeFS.activate!
 
     before(:each) do

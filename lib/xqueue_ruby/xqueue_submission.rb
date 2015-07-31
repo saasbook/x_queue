@@ -52,6 +52,8 @@ class XQueueSubmission
     @queue.put_result(@secret, @score, @correct, @message)
   end
 
+
+
   # A convenience method for external autograders to submit a normalized score and comments to edX.
   #--
   # TODO: HTML escape and parse comments before setting into message.
@@ -118,7 +120,6 @@ class XQueueSubmission
   end
 
   protected
-
   # +contents+ is a string representing a zip file. Unzips to +root_location+
   #--
   # Source for zipping code:
