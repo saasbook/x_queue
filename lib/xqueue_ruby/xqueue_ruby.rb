@@ -157,7 +157,7 @@ class XQueue
   def put_result(header, score, correct=true, message='')
     xqueue_body =   JSON.generate({
                   :correct   => (!!correct).to_s.capitalize,  # valid is True or False
-                  :score     => score.to_s,
+                  :score     => score,
                   :msg   => message.encode('UTF-8',
                     :invalid => :replace, :undef => :replace, :replace => '?'),
                                   })
