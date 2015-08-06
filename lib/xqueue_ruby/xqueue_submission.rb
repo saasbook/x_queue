@@ -58,9 +58,10 @@ class XQueueSubmission
   #--
   # TODO: HTML escape and parse comments before setting into message.
   def grade(comments, score, total_score=100.0)
-    @message = comments.prepend('<pre>').append('</pre>')
+    @message = comments.prepend('<pre>').concat('</pre>')
     @score = score.to_f / total_score
   end
+
   # call on XQueueSubmission to fetch the files if remote format and return XQueueSubmission
   def fetch_files!
     if files
@@ -69,6 +70,7 @@ class XQueueSubmission
     end
     self
   end
+
   # call on XQueueSubmission to write files that have already been fetched and writes them to a specified location.
   def write_to_location!(root_file_path)
 
