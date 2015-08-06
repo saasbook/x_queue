@@ -58,7 +58,7 @@ class XQueueSubmission
   # A convenience method for external autograders to submit a normalized score and comments to edX.
   #--
   def grade!(comments, score, total_score=100.0)
-    @message = CGI.escape_html(comments).prepend('<pre>').concat('</pre>')
+    @message = comments.prepend('<pre>').concat('</pre>')
     @score = score.to_f / total_score * 100  # make this out of 100 since that seems to be default
     @correct = total_score == score
   end
