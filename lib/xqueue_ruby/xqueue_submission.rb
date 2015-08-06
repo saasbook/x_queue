@@ -3,6 +3,7 @@ require 'active_model'
 require 'json'
 require 'zip'
 require 'tempfile'
+require 'cgi'
 
 class XQueueSubmission
   class InvalidSubmissionError < StandardError ;  end
@@ -56,12 +57,11 @@ class XQueueSubmission
 
   # A convenience method for external autograders to submit a normalized score and comments to edX.
   #--
-  # TODO: HTML escape and parse comments before setting into message.
-  def grade(comments, score, total_score=100.0)
-    @message = comments.prepend('<pre>').concat('</pre>')
-    @score = score.to_f / total_score
+  def grade!(comments, score, total_score=100.0)
+    @message = CGI.escape_html(comments).prepend('<pre>').concat('</pre>')
+    @score = score.to_f / total_score * 100  # make this out of 100 since that seems to be default
+    @correct = total_score == score
   end
-
   # call on XQueueSubmission to fetch the files if remote format and return XQueueSubmission
   def fetch_files!
     if files

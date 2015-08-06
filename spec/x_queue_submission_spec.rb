@@ -85,4 +85,31 @@ describe XQueueSubmission do
     end
     FakeFS.deactivate!
   end
+
+  context 'has convenience grading methods for autograders' do
+    before(:each) do
+      @q = XQueue.new('good','good','good','good','my_queue', true)
+      @q.stub(:authenticated?).and_return(true)
+      fixture_response(:get, 'valid_submission_with_zip.json')
+      fixture_response(:get, 'example.zip')
+      @q.stub(:queue_length).and_return(1)
+      @submission = @q.get_submission
+    end
+
+    it 'will escape html' do
+      @submission.grade!('<yolo>', 0, 100)
+      expect(@submission.message).to be == '<pre>&lt;yolo&gt;</pre>'
+    end
+
+    it 'will mark submissions correct if they get full points' do
+      @submission.grade!('<yolo>', 100, 100)
+      expect(@submission.correct).to be true
+    end
+
+    it 'will not mark submissions correct if they don\'t get full points' do
+      @submission.grade!('<yolo>', 80, 100)
+      expect(@submission.correct).to be false
+    end
+  end
+
 end
