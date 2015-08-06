@@ -58,7 +58,7 @@ class XQueueSubmission
   #--
   # TODO: HTML escape and parse comments before setting into message.
   def grade(comments, score, total_score=100.0)
-    @message = comments
+    @message = comments.prepend('<pre>').append('</pre>')
     @score = score.to_f / total_score
   end
   # call on XQueueSubmission to fetch the files if remote format and return XQueueSubmission
