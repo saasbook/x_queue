@@ -57,7 +57,7 @@ describe XQueueSubmission do
     end
 
     it 'should submit to its XQueue valid fields' do 
-      expect(@xq).to receive(:put_result).with('some_secret_001', 1.3, true, 'good job student!')
+      expect(@xq).to receive(:put_result).with('some_secret_001', 1.3, true, '<pre>good job student!</pre>')
       @submission.post_back
     end
   end
@@ -95,11 +95,6 @@ describe XQueueSubmission do
       @q.stub(:queue_length).and_return(1)
       @submission = @q.get_submission
     end
-    #
-    # it 'will escape html' do
-    #   @submission.grade!('<yolo>', 0, 100)
-    #   expect(@submission.message).to be == '<pre>&lt;yolo&gt;</pre>'
-    # end
 
     it 'will mark submissions correct if they get full points' do
       @submission.grade!('<yolo>', 100, 100)

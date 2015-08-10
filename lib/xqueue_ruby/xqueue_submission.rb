@@ -47,10 +47,10 @@ class XQueueSubmission
   end
 
 
-  # Puts a properly formatted response containing fields @secret, @score, @correct, @message back into
+  # Puts a properly formatted response containing fields @secret, @score, @correct, html formatted @message back into
   # the XQueue this submission was created from.
   def post_back
-    @queue.put_result(@secret, @score, @correct, @message)
+    @queue.put_result(@secret, @score, @correct, @message.prepend('<pre>').concat('</pre>'))
   end
 
 
@@ -58,7 +58,7 @@ class XQueueSubmission
   # A convenience method for external autograders to submit a normalized score and comments to edX.
   #--
   def grade!(comments, score, total_score=100.0)
-    @message = comments.prepend('<pre>').concat('</pre>')
+    @message << comments
     @score = score.to_f / total_score * 100  # make this out of 100 since that seems to be default
     @correct = total_score == score
   end
