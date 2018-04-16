@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name        = 'xqueue_ruby'
-  spec.version     = '0.0.1'
-  spec.date        = '2015-06-15'
+  spec.version     = '0.0.2'
+  spec.date        = '2018-04-16'
   spec.summary     = "Pull interface to Open edX XQueue"
   spec.description = "Pull interface to Open edX XQueue"
   spec.authors     = ["Armando Fox", "Aaron Zhang"]
